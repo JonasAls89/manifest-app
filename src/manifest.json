@@ -1,0 +1,111 @@
+{
+  "name": "This is a manifest",  
+  "description": "A Sesam Microservice to communicate with the Microsoft Graph API and the Sharepoint REST API.",
+    "properties": {
+      "client_id": {
+        "type": "string",
+        "description": "Microsoft Graph API client_id",
+        "required": true
+      },
+      "client_secret": {
+        "type": "string",
+        "description": "Microsoft Graph API client_secret",
+        "required": true
+      },
+      "grant_type": {
+        "type": "string",
+        "description": "Microsoft Graph API grant_type",
+        "required": true
+      },
+      "resource": {
+        "type": "string",
+        "description": "Microsoft Graph API resource",
+        "required": true
+      },
+      "entities_path": {
+        "type": "string",
+        "description": "",
+        "required": true
+      },
+      "next_page": {
+        "type": "string",
+        "description": "",
+        "required": true
+      },
+      "token_url": {
+        "type": "string",
+        "description": "Microsoft Graph API access token url",
+        "required": true
+      },
+      "base_url": {
+        "type": "string",
+        "description": "Microsoft Graph API base url",
+        "default": "https://graph.microsoft.com/v1.0/"
+      },
+      "sleep": {
+        "type": "integer",
+        "description": "Optional sleep interval between entities requests"
+      },
+      "sharepoint_url": {
+        "type": "string",
+        "description": "Base url for Sharepoint site"
+      }
+    },
+    "sources": {
+      "entities": {
+        "url": "/entities/<path>",
+        "supports_since": true,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative graph url.",
+            "required": true
+          }
+        },
+        "description": "Generic endpoint to return all types of entities based on the given graph url. [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer#) is your friend."
+      },
+      "file": {
+        "url": "/file/<path>",
+        "supports_since": true,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Request with a *file path* will return the file bytes. A request with a *directory path* will return metadata for all files in directory path",
+            "required": true
+          }
+        },
+        "description": "This endpoint requires the env var 'sharepoint_url'\n\nIt uses the default document library \"Shared Documents\". To specify a different document library, add a section to the path after the site/team with /doclib:MyFancyDocumentLib/\ni.e. `teams/SesamTeam/doclib:SpecialLib/folder2/my_awesome_file.pdf`"
+      },
+      "metadata": {
+        "url": "/metadata/<path>",
+        "supports_since": true,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative graph url.",
+            "required": true
+          }
+        },
+        "description": "Generic endpoint to return all types of entities based on the given graph url. [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer#) is your friend."
+      }
+    },
+    "sinks": {
+      "file": {
+        "url": "/file/<path>",
+        "method": "POST",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Request with a *file path* will write the posted file to the given file path",
+            "required": true
+          }
+        },
+        "description": "This endpoint requires the env var 'sharepoint_url'\n\nIt uses the default document library \"Shared Documents\". To specify a different document library, add a section to the path after the site/team with /doclib:MyFancyDocumentLib/\ni.e. `teams/SesamTeam/doclib:SpecialLib/folder2/my_awesome_file.pdf`"
+      }
+    },
+    "transform": {
+      "type": "http",
+      "system": "<your-system-name>",
+      "url": "/entities/<path>"
+    }
+  }
